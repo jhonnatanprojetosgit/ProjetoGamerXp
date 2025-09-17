@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Games - Pesquisa</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo">E</div>
+            <ul class="nav-icons">
+                <li><a href="index.html"><i class="fas fa-home"></i><span class="tooltip">Início</span></a></li>
+                <li><a href="#"><i class="fas fa-store"></i><span class="tooltip">Loja</span></a></li>
+                <li><a href="#"><i class="fas fa-gamepad"></i><span class="tooltip">Biblioteca</span></a></li>
+                <li><a href="#"><i class="fas fa-download"></i><span class="tooltip">Baixados</span></a></li>
+                <li><a href="#"><i class="fas fa-shopping-cart"></i><span class="tooltip">Carrinho</span></a></li>
+                <li class="active"><a href="search.html"><i class="fas fa-search"></i><span class="tooltip">Pesquisa</span></a></li>
+            </ul>
+        </div>
+        <div class="sidebar-bottom">
+            <ul class="nav-icons">
+                <li><a href="#" id="profile-btn"><i class="fas fa-user-circle"></i><span class="tooltip">Perfil</span></a></li>
+                <li><a href="#"><i class="fas fa-cog"></i><span class="tooltip">Configurações</span></a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="main-content-wrapper">
+        <main class="main-content">
+            <section class="search-page-section">
+                <div class="search-container">
+                    <h1>Pesquisar na Loja</h1>
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Pesquisar por jogos...">
+                    </div>
+                </div>
+
+                <div class="results-container">
+                    <h2>Resultados</h2>
+                    <div id="gamesResults" class="search-results-grid">
+                        </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="search.js"></script>
+
+</body>
+
+</html>

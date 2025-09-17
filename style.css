@@ -1,0 +1,736 @@
+:root {
+    --preto-principal: #121212;
+    --preto-secundario: #1a1a1a;
+    --laranja-escuro: #FF4500;
+    --vermelho-principal: #DC143C;
+    --branco-detalhe: #F0F0F0;
+    --cinza-claro: #888;
+    --sombra-card: rgba(0, 0, 0, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    /* Luz laranja/vermelha vindo do canto inferior direito */
+    background: linear-gradient(to top left, var(--preto-principal) 50%, #DC143C 90%, #FF4500 100%);
+    color: var(--branco-detalhe);
+    min-height: 100vh;
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 80px;
+    background-color: var(--preto-secundario);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    height: 100%;
+    z-index: 100;
+    border-right: 1px solid #222;
+}
+
+.sidebar .logo {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--laranja-escuro);
+    margin-bottom: 30px;
+}
+
+.nav-icons {
+    list-style: none;
+    width: 100%;
+    text-align: center;
+}
+
+.nav-icons li {
+    margin-bottom: 25px;
+}
+
+.nav-icons li a {
+    color: var(--cinza-claro);
+    font-size: 24px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-icons li a:hover,
+.nav-icons li.active a {
+    color: var(--branco-detalhe);
+}
+
+.nav-icons li a .tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 100%;
+    margin-left: 15px;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 14px;
+}
+
+.nav-icons li a:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Main Content Wrapper */
+.main-content-wrapper {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    width: calc(100% - 80px);
+    padding: 20px 5%;
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 80px;
+    z-index: 10;
+}
+
+.navbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: var(--branco-detalhe);
+    font-weight: 600;
+    margin-left: 30px;
+    transition: color 0.3s ease;
+}
+
+.nav-links li a:hover {
+    color: var(--vermelho-principal);
+}
+
+.main-content {
+    padding-top: 80px;
+    flex-grow: 1;
+}
+
+/* Nova seção de pôsteres */
+.main-posters-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 30px 5%;
+    align-items: start;
+    min-height: 500px;
+    /* Altura mínima para a seção */
+}
+
+.poster-carousel-container {
+    position: relative;
+    height: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+.main-poster {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.main-poster.active {
+    opacity: 1;
+}
+
+.poster-bg {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.poster-info {
+    position: relative;
+    z-index: 2;
+    padding: 40px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.8), transparent);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.poster-info h2 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.poster-info p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
+
+.btn-secondary {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--branco-detalhe);
+    color: var(--preto-principal);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-3px);
+}
+
+.side-posters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.side-poster {
+    padding: 20px;
+    background-color: var(--preto-secundario);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.side-poster.active,
+.side-poster:hover {
+    background-color: #2a2a2a;
+}
+
+.side-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.side-title {
+    font-size: 0.9em;
+    color: var(--cinza-claro);
+}
+
+.side-desc {
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.games-section {
+    padding: 50px 5%;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.section-header h2 {
+    font-size: 2.5em;
+    font-weight: 700;
+    border-left: 5px solid var(--vermelho-principal);
+    padding-left: 15px;
+}
+
+/* Carrossel e Navegação (existente) */
+.carousel-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-btn {
+    background-color: var(--preto-secundario);
+    color: var(--cinza-claro);
+    border: 1px solid #333;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-btn:hover {
+    background-color: #333;
+    color: var(--branco-detalhe);
+}
+
+.carousel-wrapper {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+    scrollbar-width: none;
+}
+
+.carousel-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.games-grid {
+    display: flex;
+    gap: 30px;
+    padding-right: 20px;
+}
+
+.game-card {
+    flex-shrink: 0;
+    width: 280px;
+    background-color: var(--preto-secundario);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px var(--sombra-card);
+}
+
+.game-card .placeholder {
+    width: 100%;
+    height: 300px;
+    background-color: #333;
+}
+
+.game-info {
+    padding: 20px;
+}
+
+.game-info h3 {
+    font-size: 1.4em;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--laranja-escuro);
+}
+
+.game-price {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--branco-detalhe);
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #333;
+    margin-top: 50px;
+    color: #888;
+}
+
+/* Modal (Pop-up) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background-color: var(--preto-secundario);
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close-btn {
+    color: var(--cinza-claro);
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: var(--vermelho-principal);
+}
+
+.modal-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #333;
+}
+
+.tab-btn {
+    background-color: transparent;
+    border: none;
+    color: var(--cinza-claro);
+    padding: 10px 20px;
+    font-size: 1.1em;
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+    outline: none;
+}
+
+.tab-btn.active {
+    color: var(--branco-detalhe);
+    border-bottom: 2px solid var(--vermelho-principal);
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: var(--branco-detalhe);
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: var(--laranja-escuro);
+}
+
+/* ========================================= */
+/* MEDIA QUERY - RESPONSIVO         */
+/* ========================================= */
+
+/* Estilos para telas com largura máxima de 768px (tablets e celulares) */
+@media (max-width: 768px) {
+
+    /* 1. Esconde a sidebar em telas pequenas */
+    .sidebar {
+        display: none;
+    }
+
+    /* 2. Faz o conteúdo principal ocupar toda a tela */
+    .main-content-wrapper {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    /* 3. Ajusta o header para a nova realidade sem sidebar */
+    .header {
+        width: 100%;
+        left: 0;
+        padding: 20px;
+        /* Ajusta o padding para telas menores */
+    }
+
+    /* 4. Empilha os banners um sobre o outro */
+    .main-posters-section {
+        grid-template-columns: 1fr;
+        /* Muda de 2 colunas para apenas 1 */
+        padding: 20px;
+    }
+
+    /* 5. Ajusta o tamanho das fontes dos títulos */
+    .poster-info h2 {
+        font-size: 1.8em;
+    }
+
+    .section-header h2 {
+        font-size: 1.8em;
+    }
+
+    /* 6. Ajusta o tamanho do card de jogo para preencher mais a tela */
+    .game-card {
+        width: 250px;
+    }
+}
+
+
+/* Adicione este código ao final do seu arquivo style.css */
+
+.auth-page-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.auth-content {
+    background-color: var(--preto-secundario);
+    padding: 30px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.auth-content .page-title {
+    text-align: center;
+    font-size: 2em;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: var(--branco-detalhe);
+}
+
+.auth-forms-container .form-group input {
+    /* Herda o estilo já criado para os inputs */
+    width: 100%;
+}
+
+.auth-content .login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+.auth-content .login-link a {
+    color: var(--vermelho-principal);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ========================================= */
+/* ESTILO DO BOTÃO DE SUBMISSÃO (FORMULÁRIO) */
+/* ========================================= */
+
+.btn-primary {
+    /* Layout e Espaçamento */
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: 25px;
+    /* Adiciona um espaço acima do botão */
+
+    /* Fonte e Texto */
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--branco-detalhe);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    /* Aparência */
+    background-color: var(--vermelho-principal);
+    border: none;
+    border-radius: 5px;
+    /* Mesma borda dos inputs para consistência */
+    cursor: pointer;
+
+    /* Efeitos e Transições */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+    /* Efeito ao passar o mouse */
+    background-color: #b01030;
+    /* Um tom de vermelho um pouco mais escuro */
+    transform: translateY(-3px);
+    /* Efeito de "levantar" */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ====================================================== */
+/* ESTILO PARA IMAGENS DENTRO DOS CARDS DE JOGOS (v2)     */
+/* ====================================================== */
+
+/* 1. Prepara a "moldura" da imagem */
+.placeholder {
+    height: 300px; /* Define a altura fixa para a área da imagem */
+    width: 100%;   /* Garante que o container ocupe toda a largura do card */
+    overflow: hidden; /* Garante que nada vaze para fora do raio da borda */
+}
+
+/* 2. Aplica o enquadramento na imagem que está DENTRO da moldura */
+.placeholder img {
+    width: 100%;   /* Faz a imagem ocupar 100% da LARGURA da moldura */
+    height: 100%;  /* Faz a imagem ocupar 100% da ALTURA da moldura */
+    display: block;  /* Remove possíveis espaços em branco extras */
+    
+    /* A propriedade principal que enquadra tudo sem distorcer */
+    object-fit: cover; 
+}
+
+.fundo-cabecalho {
+  width: 400px; /* Defina a largura da div */
+  height: 300px; /* Defina a altura da div */
+  background-image: url('caminho/para/sua/imagem.jpg'); /* Caminho da imagem */
+  background-size: cover; /* Para a imagem cobrir toda a div */
+  background-repeat: no-repeat; /* Para a imagem não se repetir */
+  background-position: center; /* Para a imagem ficar centralizada */
+}
+
+/* ========================================= */
+/* ESTILOS DA PÁGINA DE BUSCA (search.html)  */
+/* ========================================= */
+
+.search-page-section {
+    padding: 50px 5%;
+}
+
+.search-container {
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.search-container h1 {
+    font-size: 2.8em;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: var(--branco-detalhe);
+}
+
+.search-input-wrapper {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 15px 20px 15px 50px; /* Adiciona espaço à esquerda para o ícone */
+    background-color: var(--preto-secundario);
+    border: 2px solid #333;
+    border-radius: 50px; /* Deixa o campo de busca arredondado */
+    color: var(--branco-detalhe);
+    font-size: 1.1em;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#searchInput:focus {
+    border-color: var(--laranja-escuro);
+    box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
+}
+
+#searchInput::placeholder {
+    color: var(--cinza-claro);
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: var(--cinza-claro);
+    font-size: 1.2em;
+}
+
+.results-container h2 {
+    font-size: 2em;
+    font-weight: 600;
+    margin-bottom: 30px;
+    border-left: 5px solid var(--vermelho-principal);
+    padding-left: 15px;
+}
+
+.search-results-grid {
+    display: grid;
+    /* Cria um grid responsivo que se ajusta ao tamanho da tela */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* O estilo para .game-card já existe e será aplicado automaticamente.
+   Não é necessário recriá-lo. */
+
+/* Ajuste para telas menores */
+@media (max-width: 768px) {
+    .search-container h1 {
+        font-size: 2em;
+    }
+
+    .results-container h2 {
+        font-size: 1.6em;
+    }
+
+    .search-results-grid {
+        /* Ajusta o tamanho mínimo do card para telas pequenas */
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+    }
+}

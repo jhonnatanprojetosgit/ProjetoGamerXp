@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Games - Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo">E</div>
+            <ul class="nav-icons">
+                <li class="active"><a href="#"><i class="fas fa-home"></i><span class="tooltip">Início</span></a></li>
+                <li><a href="#"><i class="fas fa-store"></i><span class="tooltip">Loja</span></a></li>
+                <li><a href="#"><i class="fas fa-gamepad"></i><span class="tooltip">Biblioteca</span></a></li>
+                <li><a href="#"><i class="fas fa-download"></i><span class="tooltip">Baixados</span></a></li>
+                <li><a href="#"><i class="fas fa-shopping-cart"></i><span class="tooltip">Carrinho</span></a></li>
+                <li><a href="search.html"><i class="fas fa-search"></i><span class="tooltip">Pesquisa</span></a></li>
+            </ul>
+        </div>
+        <div class="sidebar-bottom">
+            <ul class="nav-icons">
+                <li><a href="#" id="profile-btn"><i class="fas fa-user-circle"></i><span
+                            class="tooltip">Perfil</span></a></li>
+                <li><a href="#"><i class="fas fa-cog"></i><span class="tooltip">Configurações</span></a></li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="main-content-wrapper">
+        <header class="header">
+            <nav class="navbar">
+                <ul class="nav-links">
+                    <li><a href="https://chat.whatsapp.com/JuzU3601avhEgAJPMYNbnW?mode=ems_wa_t">suporte</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <section class="main-posters-section">
+                <div class="poster-carousel-container">
+                    <div class="poster main-poster active" data-index="0">
+                        <div class="poster-info">
+                            <h2>Jogos de Verão ☀️</h2>
+                            <p>Grandes títulos com até 75% de desconto. Não perca!</p>
+                            <a href="#" class="btn-secondary">Comprar Agora</a>
+                        </div>
+                        <div class="poster-bg"
+                            style="background-image: url('https://via.placeholder.com/1200x500/FF4500/DC143C?text=Banner+Principal+1')">
+                        </div>
+                    </div>
+                    <div class="poster main-poster" data-index="1">
+                        <div class="poster-info">
+                            <h2>Novo Lançamento</h2>
+                            <p>Mergulhe em uma aventura épica em mundo aberto.</p>
+                            <a href="#" class="btn-secondary">Saber Mais</a>
+                        </div>
+                        <div class="poster-bg"
+                            style="background-image: url('https://via.placeholder.com/1200x500/DC143C/FF4500?text=Banner+Principal+2')">
+                        </div>
+                    </div>
+                    <div class="poster main-poster" data-index="2">
+                        <div class="poster-info">
+                            <h2>Jogue de Graça</h2>
+                            <p>Resgate o jogo grátis da semana. Disponível por tempo limitado!</p>
+                            <a href="#" class="btn-secondary">Resgatar</a>
+                        </div>
+                        <div class="poster-bg"
+                            style="background-image: url('https://via.placeholder.com/1200x500/FF4500/DC143C?text=Banner+Principal+3')">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="side-posters-container">
+                    <div class="poster side-poster active" data-index="0">
+                        <div class="side-info">
+                            <span class="side-title">Oferta Especial</span>
+                            <span class="side-desc">Recompensas Epic Turbinadas</span>
+                        </div>
+                    </div>
+                    <div class="poster side-poster" data-index="1">
+                        <div class="side-info">
+                            <span class="side-title">Evento no Jogo</span>
+                            <span class="side-desc">Expansão de Inverno</span>
+                        </div>
+                    </div>
+                    <div class="poster side-poster" data-index="2">
+                        <div class="side-info">
+                            <span class="side-title">Gratuito Agora</span>
+                            <span class="side-desc">Resgate o jogo grátis</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="games-section section-destaque">
+                <div class="section-header">
+                    <h2>Jogos em Destaque</h2>
+                    <div class="carousel-nav">
+                        <button class="nav-btn prev" data-target="destaque"><i class="fas fa-chevron-left"></i></button>
+                        <button class="nav-btn next" data-target="destaque"><i
+                                class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="carousel-wrapper" id="carousel-free">
+                    <div class="games-grid">
+                        <div class="game-card">
+                            <div class="placeholder">
+
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiyscLiqr-PAxWDnpUCHWoEBvkQFnoECCUQAQ&url=https%3A%2F%2Fstore.steampowered.com%2Fapp%2F2322010%2FGod_of_War_Ragnark%2F&usg=AOvVaw2_wIimaEOtmF214VijzErU&opi=89978449">
+
+                                    <img src="imagens-lancamentos/1.jpg" alt="" >
+                                </a>
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 1</h3><span class="game-price">R$ 150,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder"> 
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjHw4aKrL-PAxVTO7kGHWDvEBAQFnoECCQQAQ&url=https%3A%2F%2Fstore.steampowered.com%2Fapp%2F2239550%2FWatch_Dogs_Legion%2F&usg=AOvVaw3oom2X7XNY8fpZK85IdTAN&opi=89978449">
+                                    <img src="imagens-lancamentos/2.webp" alt="">
+                                </a>
+                                
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 2</h3><span class="game-price">Gratuito</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjnpcf2rL-PAxUTJrkGHeUkB3kQFnoECDMQAQ&url=https%3A%2F%2Fstore.steampowered.com%2Fapp%2F2208920%2FAssassins_Creed_Valhalla%2F&usg=AOvVaw2h5a_YnU5kH0zUkMdgcfbr&opi=89978449">
+                                    <img src="imagens-lancamentos/3.jpg" alt="">
+                                </a>
+                                
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 3</h3><span class="game-price">R$ 100,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjcnc-Mrb-PAxV5LLkGHRd0Iw4QFnoECCAQAQ&url=https%3A%2F%2Fstore.steampowered.com%2Fapp%2F2369390%2FFar_Cry_6%2F&usg=AOvVaw1b5NqHdGXKdyV3oB-aqYHt&opi=89978449">
+                                <img src="imagens-lancamentos/4.jfif" alt="">
+                                </a>
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 4</h3><span class="game-price">R$ 80,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjgxO7Drb-PAxVjFLkGHb6aPJQQFnoECCYQAQ&url=https%3A%2F%2Fstore.steampowered.com%2Fapp%2F379720%2FDOOM%2F&usg=AOvVaw2eDLaTBrs56zrZzPibDsYx&opi=89978449">
+                                    <img src="imagens-lancamentos/5.jpg" alt="">
+                                </a>
+                                
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 5</h3><span class="game-price">R$ 200,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwimjuPOrb-PAxXlD7kGHS1dBlEQFnoECDcQAQ&url=https%3A%2F%2Fstore.steampowered.com%2Fapp%2F203160%2FTomb_Raider%2F&usg=AOvVaw0YzcAsKE9ihxy8pt-Hu2ch&opi=89978449">
+                                    <img src="imagens-lancamentos/6.jpg" alt="">
+                                </a>
+                                
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 6</h3><span class="game-price">Gratuito</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwje0uvfrb-PAxVmGrkGHXstJY8QFnoECB4QAQ&url=https%3A%2F%2Fwww.xbox.com%2Fpt-BR%2Fgames%2Fstore%2Fassassins-creed-shadows%2F9p42lwgmc7k4&usg=AOvVaw3xHIWHOC8Xp1HFbrkzYcWq&opi=89978449">
+                                    <img src="imagens-lancamentos/7.avif" alt="">
+                                </a>
+                                
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 7</h3><span class="game-price">R$ 90,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwikzIeDrr-PAxWxgGEGHYBtAl4QFnoECBkQAQ&url=https%3A%2F%2Flista.mercadolivre.com.br%2Fstreetwise&usg=AOvVaw0DBYZIsMDUYZczSoMB_3uW&opi=89978449">
+                                    <img src="imagens-lancamentos/8.jpg" alt="">
+                                </a>
+                                
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 8</h3><span class="game-price">R$ 120,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjsksCerr-PAxXBPrkGHT_iB9wQFnoECBYQAQ&url=https%3A%2F%2Fstore.steampowered.com%2Ftags%2Fen%2FZelda%3Fl%3Dportuguese&usg=AOvVaw0bon-kXSHePqPl6vg-nV7M&opi=89978449">
+                                    <img src="imagens-lancamentos/9.png" alt="">
+                                </a>
+                                
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 9</h3><span class="game-price">Gratuito</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjo7IKyrr-PAxX2K7kGHXb4KfcQFnoECEAQAQ&url=https%3A%2F%2Fstore.steampowered.com%2Fcurator%2F7870502-BLOODBORNE-PC%2F%3Fl%3Dportuguese&usg=AOvVaw348ehnDljjhdKTkTjTYtj5&opi=89978449">
+                                    <img src="imagens-lancamentos/10.jpg" alt="">
+                                </a>
+                                
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 10</h3><span class="game-price">R$ 50,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens-lancamentos/11.jpg" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 11</h3><span class="game-price">R$ 180,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <a href="https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwi_7LrHrr-PAxVCH7kGHcdIAyIQFnoECCAQAQ&url=https%3A%2F%2Fstore.steampowered.com%2Fapp%2F2417610%2FMETAL_GEAR_SOLID_D_SNAKE_EATER%2F&usg=AOvVaw0uK-ZAHLWKEfcWJ5gAljxX&opi=89978449">
+                                    <img src="imagens-lancamentos/12.webp" alt="">
+                                </a>
+                                
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 12</h3><span class="game-price">R$ 75,00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="games-section section-free">
+                <div class="section-header">
+                    <h2>Lancamentos</h2>
+                    <div class="carousel-nav">
+                        <button class="nav-btn prev" data-target="free"><i class="fas fa-chevron-left"></i></button>
+                        <button class="nav-btn next" data-target="free"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="carousel-wrapper" id="carousel-free">
+                    <div class="games-grid">
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/1.jfif" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 1</h3><span class="game-price">R$ 150,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/2.jfif" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 2</h3><span class="game-price">Gratuito</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/3.jpg" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 3</h3><span class="game-price">R$ 100,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/4.jpg" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 4</h3><span class="game-price">R$ 80,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/5.jpg" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 5</h3><span class="game-price">R$ 200,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/6.jpg" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 6</h3><span class="game-price">Gratuito</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/7.webp" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 7</h3><span class="game-price">R$ 90,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/8.jpg" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 8</h3><span class="game-price">R$ 120,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/9.webp" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 9</h3><span class="game-price">Gratuito</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/1.jfif" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 10</h3><span class="game-price">R$ 50,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/2.jfif" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 11</h3><span class="game-price">R$ 180,00</span>
+                            </div>
+                        </div>
+                        <div class="game-card">
+                            <div class="placeholder">
+                                <img src="imagens/3.jpg" alt="">
+                            </div>
+                            <div class="game-info">
+                                <h3>Jogo 12</h3><span class="game-price">R$ 75,00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Epic Games. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="signup">Cadastrar</button>
+            </div>
+            <div id="login-form" class="auth-form active">
+                <form>
+                    <div class="form-group">
+                        <label for="login-email">E-mail</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Senha</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </form>
+            </div>
+            <div id="signup-form" class="auth-form">
+                <form id="signup-form-modal">
+                    <div class="form-group">
+                        <label for="signup-name">Nome de Usuário</label>
+                        <input type="text" id="signup-name" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">E-mail</label>
+                        <input type="email" id="signup-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Senha</label>
+                        <input type="password" id="signup-password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Criar Conta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
