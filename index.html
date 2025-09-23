@@ -17,10 +17,6 @@
             <div class="logo">E</div>
             <ul class="nav-icons">
                 <li class="active"><a href="#"><i class="fas fa-home"></i><span class="tooltip">Início</span></a></li>
-                <li><a href="#"><i class="fas fa-store"></i><span class="tooltip">Loja</span></a></li>
-                <li><a href="#"><i class="fas fa-gamepad"></i><span class="tooltip">Biblioteca</span></a></li>
-                <li><a href="#"><i class="fas fa-download"></i><span class="tooltip">Baixados</span></a></li>
-                <li><a href="#"><i class="fas fa-shopping-cart"></i><span class="tooltip">Carrinho</span></a></li>
                 <li><a href="search.html"><i class="fas fa-search"></i><span class="tooltip">Pesquisa</span></a></li>
             </ul>
         </div>
@@ -360,44 +356,49 @@
     </div>
 
     <div id="auth-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <div class="modal-tabs">
-                <button class="tab-btn active" data-tab="login">Login</button>
-                <button class="tab-btn" data-tab="signup">Cadastrar</button>
-            </div>
-            <div id="login-form" class="auth-form active">
-                <form>
-                    <div class="form-group">
-                        <label for="login-email">E-mail</label>
-                        <input type="email" id="login-email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="login-password">Senha</label>
-                        <input type="password" id="login-password" required>
-                    </div>
-                    <button type="submit" class="btn-primary">Entrar</button>
-                </form>
-            </div>
-            <div id="signup-form" class="auth-form">
-                <form id="signup-form-modal">
-                    <div class="form-group">
-                        <label for="signup-name">Nome de Usuário</label>
-                        <input type="text" id="signup-name" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signup-email">E-mail</label>
-                        <input type="email" id="signup-email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signup-password">Senha</label>
-                        <input type="password" id="signup-password" name="password" required>
-                    </div>
-                    <button type="submit" class="btn-primary">Criar Conta</button>
-                </form>
-            </div>
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div class="modal-tabs">
+            <button class="tab-btn active" data-tab="login">Login</button>
+            <button class="tab-btn" data-tab="signup">Cadastrar</button>
+        </div>
+        
+        <div id="login-form" class="auth-form active">
+            <form id="login-form-modal">
+                <div class="form-group">
+                    <label for="login-email">E-mail</label>
+                    <input type="email" id="login-email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" required autocomplete="current-password">
+                </div>
+                
+                <p id="login-error-message" class="error-message" style="display: none;"></p>
+
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+        </div>
+
+        <div id="signup-form" class="auth-form">
+            <form id="signup-form-modal">
+                <div class="form-group">
+                    <label for="signup-name">Nome de Usuário</label>
+                    <input type="text" id="signup-name" name="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">E-mail</label>
+                    <input type="email" id="signup-email" name="email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Senha</label>
+                    <input type="password" id="signup-password" name="password" required autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn-primary">Criar Conta</button>
+            </form>
         </div>
     </div>
+</div>
 
     <script src="script.js"></script>
 </body>

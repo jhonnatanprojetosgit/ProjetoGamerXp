@@ -734,3 +734,11 @@ body {
         gap: 20px;
     }
 }
+
+.error-message {
+    color: #ff4d4d; /* Vermelho claro */
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
