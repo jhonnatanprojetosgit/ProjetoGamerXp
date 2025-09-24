@@ -34,36 +34,39 @@ public class Main {
         
         System.out.println("Servidor Java iniciado. Aguardando requisições na porta " + port + "...");
 
-        String databaseUrlFromEnv = System.getenv("DATABASE_URL");
-        if (databaseUrlFromEnv == null) {
-            System.out.println("ERRO CRÍTICO: Variável de ambiente DATABASE_URL não encontrada.");
-            return;
-        }
-
-        String dbUrl = "jdbc:" + databaseUrlFromEnv;
-
+        String dbUrl = null;
         try {
-            // --- ESTA É A LINHA ADICIONADA ---
-            Class.forName("org.postgresql.Driver"); // Força o carregamento do driver do PostgreSQL
+            Class.forName("org.postgresql.Driver");
 
-            Connection conn = DriverManager.getConnection(dbUrl);
-            System.out.println("Conexão com o banco de dados PostgreSQL estabelecida.");
+            // --- CORREÇÃO FINAL E DEFINITIVA AQUI ---
+            String databaseUrlFromEnv = System.getenv("DATABASE_URL");
+            if (databaseUrlFromEnv == null) {
+                throw new Exception("Variável de ambiente DATABASE_URL não encontrada.");
+            }
+            // Substituímos o início da URL para o formato JDBC exato
+            dbUrl = databaseUrlFromEnv.replace("postgresql://", "jdbc:postgresql://");
 
-            Statement stmt = conn.createStatement();
-            String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "username TEXT NOT NULL," +
-                    "email TEXT NOT NULL UNIQUE," +
-                    "password TEXT NOT NULL);";
-            stmt.execute(sql);
-            System.out.println("Tabela 'users' verificada/criada com sucesso.");
-            conn.close(); // Fecha a conexão inicial
+            try (Connection conn = DriverManager.getConnection(dbUrl)) {
+                System.out.println("Conexão com o banco de dados PostgreSQL estabelecida.");
+
+                Statement stmt = conn.createStatement();
+                String sql = "CREATE TABLE IF NOT EXISTS users (" +
+                        "id SERIAL PRIMARY KEY," +
+                        "username TEXT NOT NULL," +
+                        "email TEXT NOT NULL UNIQUE," +
+                        "password TEXT NOT NULL);";
+                stmt.execute(sql);
+                System.out.println("Tabela 'users' verificada/criada com sucesso.");
+            }
 
         } catch (Exception e) {
-            System.out.println("ERRO CRÍTICO ao conectar ou criar tabela: " + e.getMessage());
+            System.out.println("ERRO CRÍTICO ao inicializar o banco de dados: " + e.getMessage());
             e.printStackTrace();
+            return; // Para a aplicação se não conseguir inicializar o DB
         }
 
+        // Passa a URL final para a rota de cadastro
+        final String finalDbUrl = dbUrl;
         post("/api/cadastrar", (request, response) -> {
             response.type("application/json");
 
@@ -79,7 +82,7 @@ public class Main {
 
             String sql = "INSERT INTO users(username, email, password) VALUES(?, ?, ?)";
 
-            try (Connection conn = DriverManager.getConnection(dbUrl);
+            try (Connection conn = DriverManager.getConnection(finalDbUrl);
                     PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
                 pstmt.setString(1, username);
