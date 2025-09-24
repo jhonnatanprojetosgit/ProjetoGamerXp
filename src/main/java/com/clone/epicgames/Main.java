@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class Main {
     public static void main(String[] args) {
-        staticFiles.location("/public"); // Diz ao Spark para servir arquivos da pasta /src/main/resources/public
+        staticFiles.location("/public");
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         Integer port;
@@ -30,22 +30,23 @@ public class Main {
             }
             return "OK";
         });
-        before((request, response) -> response.header("Access-control-Allow-Origin", "*"));
+        before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
         
         System.out.println("Servidor Java iniciado. Aguardando requisições na porta " + port + "...");
 
-        // --- CORREÇÃO FINAL NA LÓGICA DE CONEXÃO ---
-        
         String databaseUrlFromEnv = System.getenv("DATABASE_URL");
         if (databaseUrlFromEnv == null) {
             System.out.println("ERRO CRÍTICO: Variável de ambiente DATABASE_URL não encontrada.");
             return;
         }
 
-        // Adiciona o prefixo "jdbc:" que o DriverManager do Java precisa
         String dbUrl = "jdbc:" + databaseUrlFromEnv;
 
-        try (Connection conn = DriverManager.getConnection(dbUrl)) {
+        try {
+            // --- ESTA É A LINHA ADICIONADA ---
+            Class.forName("org.postgresql.Driver"); // Força o carregamento do driver do PostgreSQL
+
+            Connection conn = DriverManager.getConnection(dbUrl);
             System.out.println("Conexão com o banco de dados PostgreSQL estabelecida.");
 
             Statement stmt = conn.createStatement();
@@ -56,6 +57,7 @@ public class Main {
                     "password TEXT NOT NULL);";
             stmt.execute(sql);
             System.out.println("Tabela 'users' verificada/criada com sucesso.");
+            conn.close(); // Fecha a conexão inicial
 
         } catch (Exception e) {
             System.out.println("ERRO CRÍTICO ao conectar ou criar tabela: " + e.getMessage());
