@@ -8,18 +8,17 @@ import java.sql.Statement;
 
 public class Main {
     public static void main(String[] args) {
-        staticFiles.location("/public");
-        // 1. Configurar a porta do Railway ou uma porta padrão
+        staticFiles.location("/public"); // Diz ao Spark para servir arquivos da pasta /src/main/resources/public
+
         ProcessBuilder processBuilder = new ProcessBuilder();
         Integer port;
         if (processBuilder.environment().get("PORT") != null) {
             port = Integer.parseInt(processBuilder.environment().get("PORT"));
         } else {
-            port = 4567; // Porta padrão se não estiver rodando no Railway
+            port = 4567;
         }
         port(port);
 
-        // 2. Configurar o CORS (continua igual)
         options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
             if (accessControlRequestHeaders != null) {
@@ -31,27 +30,27 @@ public class Main {
             }
             return "OK";
         });
-        before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+        before((request, response) -> response.header("Access-control-Allow-Origin", "*"));
         
         System.out.println("Servidor Java iniciado. Aguardando requisições na porta " + port + "...");
 
-        // --- 3. NOVA LÓGICA DE CONEXÃO COM O POSTGRESQL ---
+        // --- CORREÇÃO FINAL NA LÓGICA DE CONEXÃO ---
         
-        // Pega a URL de conexão do banco de dados das variáveis de ambiente do Railway
-        String dbUrl = System.getenv("DATABASE_URL");
-        
-        if (dbUrl == null) {
+        String databaseUrlFromEnv = System.getenv("DATABASE_URL");
+        if (databaseUrlFromEnv == null) {
             System.out.println("ERRO CRÍTICO: Variável de ambiente DATABASE_URL não encontrada.");
-            return; // Para a aplicação se não houver como conectar
+            return;
         }
+
+        // Adiciona o prefixo "jdbc:" que o DriverManager do Java precisa
+        String dbUrl = "jdbc:" + databaseUrlFromEnv;
 
         try (Connection conn = DriverManager.getConnection(dbUrl)) {
             System.out.println("Conexão com o banco de dados PostgreSQL estabelecida.");
 
             Statement stmt = conn.createStatement();
-            // Comando SQL ajustado para PostgreSQL
             String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                    "id SERIAL PRIMARY KEY," + // SERIAL é o autoincremento do PostgreSQL
+                    "id SERIAL PRIMARY KEY," +
                     "username TEXT NOT NULL," +
                     "email TEXT NOT NULL UNIQUE," +
                     "password TEXT NOT NULL);";
@@ -63,7 +62,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        // --- 4. ROTA DE CADASTRO (O CÓDIGO AQUI DENTRO NÃO MUDA NADA) ---
         post("/api/cadastrar", (request, response) -> {
             response.type("application/json");
 
@@ -77,10 +75,9 @@ public class Main {
                 return "{\"message\": \"Todos os campos são obrigatórios.\"}";
             }
 
-            // A lógica com PreparedStatement funciona perfeitamente com PostgreSQL
             String sql = "INSERT INTO users(username, email, password) VALUES(?, ?, ?)";
 
-            try (Connection conn = DriverManager.getConnection(dbUrl); // Conecta novamente usando a URL
+            try (Connection conn = DriverManager.getConnection(dbUrl);
                     PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
                 pstmt.setString(1, username);
@@ -91,8 +88,8 @@ public class Main {
                 return "{\"message\": \"Cadastro realizado com sucesso!\"}";
 
             } catch (java.sql.SQLException e) {
-                if (e.getSQLState().equals("23505")) { // Código de erro para violação de UNIQUE no PostgreSQL
-                    response.status(409); // Conflict
+                if (e.getSQLState().equals("23505")) {
+                    response.status(409);
                     return "{\"message\": \"Este e-mail já está cadastrado.\"}";
                 } else {
                     response.status(500);
