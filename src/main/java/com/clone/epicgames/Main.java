@@ -8,6 +8,7 @@ import java.sql.Statement;
 
 public class Main {
     public static void main(String[] args) {
+        staticFiles.location("/public");
         // 1. Configurar a porta do Railway ou uma porta padrão
         ProcessBuilder processBuilder = new ProcessBuilder();
         Integer port;

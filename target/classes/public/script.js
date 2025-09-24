@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('email', email);
             formData.append('password', password);
 
-            fetch('http://localhost:4567/api/cadastrar', {
+            // ALTERAÇÃO AQUI: Mudamos a URL para um caminho relativo
+            fetch('/api/cadastrar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: formData.toString()
@@ -78,16 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ======================================================
-    // NOVO: LÓGICA PARA O FORMULÁRIO DE LOGIN NO MODAL
+    // LÓGICA PARA O FORMULÁRIO DE LOGIN NO MODAL
     // ======================================================
     const loginFormModal = document.getElementById('login-form-modal');
     const loginErrorMessage = document.getElementById('login-error-message');
 
     if (loginFormModal) {
         loginFormModal.addEventListener('submit', (e) => {
-            e.preventDefault(); // Impede o recarregamento
+            e.preventDefault(); 
 
-            // Limpa mensagens de erro antigas
             loginErrorMessage.style.display = 'none';
             loginErrorMessage.textContent = '';
 
@@ -98,29 +98,26 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('email', email);
             formData.append('password', password);
 
-            // Envia para a nova rota /api/login
-            fetch('http://localhost:4567/api/login', {
+            // ALTERAÇÃO AQUI TAMBÉM: Mudamos a URL para um caminho relativo
+            fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: formData.toString()
             })
             .then(response => {
-                // Se a resposta não for OK (ex: erro 401), rejeita a promessa
                 if (!response.ok) {
                     return response.json().then(err => Promise.reject(err));
                 }
-                return response.json(); // Se for OK, processa o sucesso
+                return response.json();
             })
             .then(data => {
-                // Em caso de sucesso
-                alert(data.message); // Ex: "Login bem-sucedido!"
-                modal.style.display = 'none'; // Fecha o modal
+                alert(data.message); 
+                modal.style.display = 'none';
             })
             .catch(error => {
-                // Em caso de erro (e-mail/senha incorretos, erro de servidor)
                 console.error('Erro no login:', error);
-                loginErrorMessage.textContent = error.message; // Ex: "E-mail ou senha incorretos."
-                loginErrorMessage.style.display = 'block'; // Mostra a mensagem de erro no formulário
+                loginErrorMessage.textContent = error.message;
+                loginErrorMessage.style.display = 'block';
             });
         });
     }
