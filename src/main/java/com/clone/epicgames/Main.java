@@ -5,14 +5,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.ResultSet; // Import necessário para ler os resultados da query
 
 public class Main {
     public static void main(String[] args) {
-        // 1. Configurar a porta primeiro
-        port(4567);
+        // 1. Configurar a porta do Railway ou uma porta padrão
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        Integer port;
+        if (processBuilder.environment().get("PORT") != null) {
+            port = Integer.parseInt(processBuilder.environment().get("PORT"));
+        } else {
+            port = 4567; // Porta padrão se não estiver rodando no Railway
+        }
+        port(port);
 
-        // 2. Configurar o CORS
+        // 2. Configurar o CORS (continua igual)
         options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
             if (accessControlRequestHeaders != null) {
@@ -25,21 +31,26 @@ public class Main {
             return "OK";
         });
         before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+        
+        System.out.println("Servidor Java iniciado. Aguardando requisições na porta " + port + "...");
 
-        System.out.println("Servidor Java iniciado. Aguardando requisições na porta 4567...");
+        // --- 3. NOVA LÓGICA DE CONEXÃO COM O POSTGRESQL ---
+        
+        // Pega a URL de conexão do banco de dados das variáveis de ambiente do Railway
+        String dbUrl = System.getenv("DATABASE_URL");
+        
+        if (dbUrl == null) {
+            System.out.println("ERRO CRÍTICO: Variável de ambiente DATABASE_URL não encontrada.");
+            return; // Para a aplicação se não houver como conectar
+        }
 
-        String userHome = System.getProperty("user.home");
-        String dbPath = userHome + "/Desktop/epicgames.db";
-        String url = "jdbc:sqlite:" + dbPath;
+        try (Connection conn = DriverManager.getConnection(dbUrl)) {
+            System.out.println("Conexão com o banco de dados PostgreSQL estabelecida.");
 
-        System.out.println("Usando banco de dados em: " + dbPath);
-
-        try (Connection conn = DriverManager.getConnection(url);
-            Statement stmt = conn.createStatement()) {
-            
-            System.out.println("Conexão com o banco de dados SQLite estabelecida.");
+            Statement stmt = conn.createStatement();
+            // Comando SQL ajustado para PostgreSQL
             String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "id SERIAL PRIMARY KEY," + // SERIAL é o autoincremento do PostgreSQL
                     "username TEXT NOT NULL," +
                     "email TEXT NOT NULL UNIQUE," +
                     "password TEXT NOT NULL);";
@@ -48,9 +59,10 @@ public class Main {
 
         } catch (Exception e) {
             System.out.println("ERRO CRÍTICO ao conectar ou criar tabela: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        // Rota para o formulário de cadastro
+        // --- 4. ROTA DE CADASTRO (O CÓDIGO AQUI DENTRO NÃO MUDA NADA) ---
         post("/api/cadastrar", (request, response) -> {
             response.type("application/json");
 
@@ -58,90 +70,34 @@ public class Main {
             String email = request.queryParams("email");
             String password = request.queryParams("password");
 
-            System.out.println("Recebida requisição de cadastro: " + username + ", " + email);
-
-            if (username == null || username.isEmpty() || email == null || email.isEmpty() || password == null || password.isEmpty()) {
+            if (username == null || username.isEmpty() || email == null || email.isEmpty() || password == null
+                    || password.isEmpty()) {
                 response.status(400);
-                System.out.println("Falha na validação: campos obrigatórios ausentes.");
                 return "{\"message\": \"Todos os campos são obrigatórios.\"}";
             }
 
+            // A lógica com PreparedStatement funciona perfeitamente com PostgreSQL
             String sql = "INSERT INTO users(username, email, password) VALUES(?, ?, ?)";
 
-            try (Connection conn = DriverManager.getConnection(url);
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            try (Connection conn = DriverManager.getConnection(dbUrl); // Conecta novamente usando a URL
+                    PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
                 pstmt.setString(1, username);
                 pstmt.setString(2, email);
                 pstmt.setString(3, password);
                 pstmt.executeUpdate();
 
-                System.out.println("SUCESSO: Novo usuário cadastrado: " + email);
                 return "{\"message\": \"Cadastro realizado com sucesso!\"}";
 
             } catch (java.sql.SQLException e) {
-                if (e.getMessage().contains("UNIQUE constraint failed")) {
+                if (e.getSQLState().equals("23505")) { // Código de erro para violação de UNIQUE no PostgreSQL
                     response.status(409); // Conflict
-                    System.out.println("ERRO: E-mail já cadastrado: " + email);
                     return "{\"message\": \"Este e-mail já está cadastrado.\"}";
                 } else {
                     response.status(500);
-                    System.out.println("ERRO de SQL: " + e.getMessage());
                     e.printStackTrace();
                     return "{\"message\": \"Ocorreu um erro no servidor ao salvar os dados.\"}";
                 }
-            } catch (Exception e) {
-                response.status(500);
-                System.out.println("ERRO Inesperado: " + e.getMessage());
-                e.printStackTrace();
-                return "{\"message\": \"Ocorreu um erro inesperado no servidor.\"}";
-            }
-        });
-
-        // =======================================================
-        // NOVA ROTA DE LOGIN ADICIONADA AQUI
-        // =======================================================
-        post("/api/login", (request, response) -> {
-            response.type("application/json");
-
-            String email = request.queryParams("email");
-            String password = request.queryParams("password");
-
-            // Log para depuração
-            System.out.println("Recebida requisição de login para o e-mail: " + email);
-
-            if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-                response.status(400); // Bad Request
-                return "{\"message\": \"E-mail e senha são obrigatórios.\"}";
-            }
-            
-            String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-
-            try (Connection conn = DriverManager.getConnection(url);
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-                pstmt.setString(1, email);
-                pstmt.setString(2, password);
-
-                ResultSet rs = pstmt.executeQuery();
-
-                if (rs.next()) {
-                    // Se rs.next() for verdadeiro, significa que encontrou um usuário
-                    System.out.println("SUCESSO: Login bem-sucedido para: " + email);
-                    response.status(200);
-                    return "{\"message\": \"Login bem-sucedido!\"}";
-                } else {
-                    // Se não encontrou, o e-mail ou a senha estão errados
-                    System.out.println("FALHA: Tentativa de login com credenciais incorretas para: " + email);
-                    response.status(401); // Unauthorized
-                    return "{\"message\": \"E-mail ou senha incorretos.\"}";
-                }
-
-            } catch (Exception e) {
-                response.status(500);
-                System.out.println("ERRO no banco de dados durante o login: " + e.getMessage());
-                e.printStackTrace();
-                return "{\"message\": \"Ocorreu um erro no servidor.\"}";
             }
         });
     }
