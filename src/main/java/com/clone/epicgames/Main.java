@@ -1,10 +1,12 @@
 package com.clone.epicgames;
 
 import static spark.Spark.*;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Properties;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,6 +22,7 @@ public class Main {
         port(port);
 
         options("/*", (request, response) -> {
+            // ... (código CORS continua o mesmo)
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
             if (accessControlRequestHeaders != null) {
                 response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
@@ -34,56 +37,78 @@ public class Main {
         
         System.out.println("Servidor Java iniciado. Aguardando requisições na porta " + port + "...");
 
-        String dbUrl = null;
+        Connection conn = null;
         try {
             Class.forName("org.postgresql.Driver");
 
-            // --- CORREÇÃO FINAL E DEFINITIVA AQUI ---
+            // --- LÓGICA DE CONEXÃO ROBUSTA E CORRIGIDA ---
             String databaseUrlFromEnv = System.getenv("DATABASE_URL");
             if (databaseUrlFromEnv == null) {
                 throw new Exception("Variável de ambiente DATABASE_URL não encontrada.");
             }
-            // Substituímos o início da URL para o formato JDBC exato
-            dbUrl = databaseUrlFromEnv.replace("postgresql://", "jdbc:postgresql://");
 
-            try (Connection conn = DriverManager.getConnection(dbUrl)) {
-                System.out.println("Conexão com o banco de dados PostgreSQL estabelecida.");
+            URI dbUri = new URI(databaseUrlFromEnv);
 
-                Statement stmt = conn.createStatement();
-                String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                        "id SERIAL PRIMARY KEY," +
-                        "username TEXT NOT NULL," +
-                        "email TEXT NOT NULL UNIQUE," +
-                        "password TEXT NOT NULL);";
-                stmt.execute(sql);
-                System.out.println("Tabela 'users' verificada/criada com sucesso.");
-            }
+            String username = dbUri.getUserInfo().split(":")[0];
+            String password = dbUri.getUserInfo().split(":")[1];
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+            Properties props = new Properties();
+            props.setProperty("user", username);
+            props.setProperty("password", password);
+
+            conn = DriverManager.getConnection(dbUrl, props);
+            // --- FIM DA LÓGICA DE CONEXÃO ---
+
+            System.out.println("Conexão com o banco de dados PostgreSQL estabelecida.");
+
+            Statement stmt = conn.createStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS users (" +
+                    "id SERIAL PRIMARY KEY," +
+                    "username TEXT NOT NULL," +
+                    "email TEXT NOT NULL UNIQUE," +
+                    "password TEXT NOT NULL);";
+            stmt.execute(sql);
+            System.out.println("Tabela 'users' verificada/criada com sucesso.");
 
         } catch (Exception e) {
             System.out.println("ERRO CRÍTICO ao inicializar o banco de dados: " + e.getMessage());
             e.printStackTrace();
-            return; // Para a aplicação se não conseguir inicializar o DB
+            return;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (Exception e) { /* Ignorar */ }
+            }
         }
 
-        // Passa a URL final para a rota de cadastro
-        final String finalDbUrl = dbUrl;
         post("/api/cadastrar", (request, response) -> {
+            // ... (código da rota de cadastro continua o mesmo, sem alterações)
             response.type("application/json");
-
             String username = request.queryParams("username");
             String email = request.queryParams("email");
             String password = request.queryParams("password");
 
-            if (username == null || username.isEmpty() || email == null || email.isEmpty() || password == null
-                    || password.isEmpty()) {
+            if (username == null || username.isEmpty() || email == null || email.isEmpty() || password == null || password.isEmpty()) {
                 response.status(400);
                 return "{\"message\": \"Todos os campos são obrigatórios.\"}";
             }
 
             String sql = "INSERT INTO users(username, email, password) VALUES(?, ?, ?)";
+            
+            // Reutiliza a mesma lógica de conexão robusta para a rota
+            URI dbUri = new URI(System.getenv("DATABASE_URL"));
+            String connUsername = dbUri.getUserInfo().split(":")[0];
+            String connPassword = dbUri.getUserInfo().split(":")[1];
+            String connDbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
 
-            try (Connection conn = DriverManager.getConnection(finalDbUrl);
-                    PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            Properties props = new Properties();
+            props.setProperty("user", connUsername);
+            props.setProperty("password", connPassword);
+            
+            try (Connection connection = DriverManager.getConnection(connDbUrl, props);
+                 PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
                 pstmt.setString(1, username);
                 pstmt.setString(2, email);
@@ -91,7 +116,6 @@ public class Main {
                 pstmt.executeUpdate();
 
                 return "{\"message\": \"Cadastro realizado com sucesso!\"}";
-
             } catch (java.sql.SQLException e) {
                 if (e.getSQLState().equals("23505")) {
                     response.status(409);
