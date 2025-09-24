@@ -11,6 +11,11 @@ import java.util.Properties;
 public class Main {
     public static void main(String[] args) {
         staticFiles.location("/public");
+        // Adicione esta rota de teste
+        get("/", (req, res) -> {
+            res.type("text/html");
+            return "<h1>Servidor está no ar!</h1>";
+        });
 
         ProcessBuilder processBuilder = new ProcessBuilder();
         Integer port;
@@ -34,7 +39,7 @@ public class Main {
             return "OK";
         });
         before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
-        
+
         System.out.println("Servidor Java iniciado. Aguardando requisições na porta " + port + "...");
 
         Connection conn = null;
@@ -79,7 +84,8 @@ public class Main {
             if (conn != null) {
                 try {
                     conn.close();
-                } catch (Exception e) { /* Ignorar */ }
+                } catch (Exception e) {
+                    /* Ignorar */ }
             }
         }
 
@@ -90,13 +96,14 @@ public class Main {
             String email = request.queryParams("email");
             String password = request.queryParams("password");
 
-            if (username == null || username.isEmpty() || email == null || email.isEmpty() || password == null || password.isEmpty()) {
+            if (username == null || username.isEmpty() || email == null || email.isEmpty() || password == null
+                    || password.isEmpty()) {
                 response.status(400);
                 return "{\"message\": \"Todos os campos são obrigatórios.\"}";
             }
 
             String sql = "INSERT INTO users(username, email, password) VALUES(?, ?, ?)";
-            
+
             // Reutiliza a mesma lógica de conexão robusta para a rota
             URI dbUri = new URI(System.getenv("DATABASE_URL"));
             String connUsername = dbUri.getUserInfo().split(":")[0];
@@ -106,9 +113,9 @@ public class Main {
             Properties props = new Properties();
             props.setProperty("user", connUsername);
             props.setProperty("password", connPassword);
-            
+
             try (Connection connection = DriverManager.getConnection(connDbUrl, props);
-                PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                    PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
                 pstmt.setString(1, username);
                 pstmt.setString(2, email);
