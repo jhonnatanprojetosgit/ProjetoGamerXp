@@ -108,7 +108,7 @@ public class Main {
             props.setProperty("password", connPassword);
             
             try (Connection connection = DriverManager.getConnection(connDbUrl, props);
-                 PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
 
                 pstmt.setString(1, username);
                 pstmt.setString(2, email);
