@@ -9,7 +9,7 @@ import java.sql.Statement;
 public class Main {
     public static void main(String[] args) {
 
-        // --- 1. ORDEM DE INICIALIZAÇÃO CORRETA DO SPARK ---
+        // 1. Ordem de inicialização correta do Spark
         ProcessBuilder processBuilder = new ProcessBuilder();
         Integer port;
         if (processBuilder.environment().get("PORT") != null) {
@@ -40,41 +40,29 @@ public class Main {
 
         System.out.println("Servidor Java iniciado. Aguardando requisições na porta " + port + "...");
 
-        // --- 2. NOVA LÓGICA DE CONEXÃO USANDO VARIÁVEIS SEPARADAS ---
-        try {
-            Class.forName("org.postgresql.Driver");
+        // --- 2. LÓGICA DE CONEXÃO COM SQLITE (SIMPLES E DIRETA) ---
+        String dbUrl = "jdbc:sqlite:epicgames.db"; // Cria o arquivo na pasta da aplicação
 
-            // Pega cada parte da conexão de sua respectiva variável de ambiente
-            String dbHost = System.getenv("PGHOST");
-            String dbPort = System.getenv("PGPORT");
-            String dbName = System.getenv("PGDATABASE");
-            String dbUser = System.getenv("PGUSER");
-            String dbPassword = System.getenv("PGPASSWORD");
-
-            // Monta a URL JDBC limpa, sem usuário e senha
-            String dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
-
-            // Conecta passando o usuário e a senha separadamente (forma mais segura)
-            try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
-                System.out.println("Conexão com o banco de dados PostgreSQL estabelecida.");
-                Statement stmt = conn.createStatement();
-                String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                        "id SERIAL PRIMARY KEY," +
-                        "username TEXT NOT NULL," +
-                        "email TEXT NOT NULL UNIQUE," +
-                        "password TEXT NOT NULL);";
-                stmt.execute(sql);
-                System.out.println("Tabela 'users' verificada/criada com sucesso.");
-            }
+        try (Connection conn = DriverManager.getConnection(dbUrl)) {
+            System.out.println("Conexão com o banco de dados SQLite estabelecida.");
+            Statement stmt = conn.createStatement();
+            // SQL para SQLite
+            String sql = "CREATE TABLE IF NOT EXISTS users (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "username TEXT NOT NULL," +
+                    "email TEXT NOT NULL UNIQUE," +
+                    "password TEXT NOT NULL);";
+            stmt.execute(sql);
+            System.out.println("Tabela 'users' verificada/criada com sucesso.");
 
         } catch (Exception e) {
-            System.out.println("ERRO CRÍTICO ao inicializar o banco de dados: " + e.getMessage());
+            System.out.println("ERRO CRÍTICO ao inicializar o banco de dados SQLite: " + e.getMessage());
             e.printStackTrace();
             stop(); // Para o servidor se a conexão com o DB falhar
             return;
         }
 
-        // --- 3. ROTA DA API (USA A MESMA LÓGICA DE CONEXÃO) ---
+        // --- 3. ROTA DA API (USA A MESMA URL DE CONEXÃO DO SQLITE) ---
         post("/api/cadastrar", (request, response) -> {
             response.type("application/json");
 
@@ -90,15 +78,7 @@ public class Main {
 
             String sql = "INSERT INTO users(username, email, password) VALUES(?, ?, ?)";
 
-            // Pega as variáveis novamente para a conexão da rota
-            String dbHost = System.getenv("PGHOST");
-            String dbPort = System.getenv("PGPORT");
-            String dbName = System.getenv("PGDATABASE");
-            String dbUser = System.getenv("PGUSER");
-            String dbPassword = System.getenv("PGPASSWORD");
-            String dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
-
-            try (Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            try (Connection connection = DriverManager.getConnection(dbUrl);
                     PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setString(1, username);
                 pstmt.setString(2, email);
@@ -106,7 +86,8 @@ public class Main {
                 pstmt.executeUpdate();
                 return "{\"message\": \"Cadastro realizado com sucesso!\"}";
             } catch (java.sql.SQLException e) {
-                if (e.getSQLState().equals("23505")) {
+                // Tratamento de erro específico do SQLite para e-mail duplicado
+                if (e.getMessage().contains("UNIQUE constraint failed")) {
                     response.status(409);
                     return "{\"message\": \"Este e-mail já está cadastrado.\"}";
                 } else {
