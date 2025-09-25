@@ -20,10 +20,6 @@ public class Main {
         port(port);
 
         staticFiles.location("/public");
-        get("/", (req, res) -> {
-            res.redirect("/index.html");
-            return null;
-        });
 
         options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
