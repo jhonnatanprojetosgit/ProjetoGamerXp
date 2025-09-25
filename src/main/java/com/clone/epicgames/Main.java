@@ -11,9 +11,9 @@ import java.util.Properties;
 public class Main {
     public static void main(String[] args) {
 
-        // --- ORDEM DE INICIALIZAÇÃO CORRETA DO SPARK ---
+        // --- ORDEM DE INICIALIZAÇÃO CORRETA E FINAL ---
 
-        // 1. CONFIGURAR O SERVIDOR (PORTA) PRIMEIRO
+        // 1. CONFIGURAR A PORTA DO SERVIDOR (DEVE SER A PRIMEIRA COISA)
         ProcessBuilder processBuilder = new ProcessBuilder();
         Integer port;
         if (processBuilder.environment().get("PORT") != null) {
@@ -23,7 +23,7 @@ public class Main {
         }
         port(port);
 
-        // 2. DEPOIS, CONFIGURAR ARQUIVOS ESTÁTICOS E ROTAS
+        // 2. CONFIGURAR ARQUIVOS ESTÁTICOS E ROTAS PRINCIPAIS
         staticFiles.location("/public");
 
         // Rota principal que redireciona para o seu frontend
@@ -32,7 +32,7 @@ public class Main {
             return null;
         });
 
-        // 3. CONFIGURAR CORS (pode ser antes ou depois das rotas)
+        // 3. CONFIGURAR CORS
         options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
             if (accessControlRequestHeaders != null) {
@@ -48,7 +48,7 @@ public class Main {
 
         System.out.println("Servidor Java iniciado. Aguardando requisições na porta " + port + "...");
 
-        // --- LÓGICA DE CONEXÃO COM O BANCO DE DADOS (continua igual) ---
+        // 4. LÓGICA DE CONEXÃO COM O BANCO DE DADOS
         String dbUrl = null;
         try {
             Class.forName("org.postgresql.Driver");
@@ -74,9 +74,11 @@ public class Main {
         } catch (Exception e) {
             System.out.println("ERRO CRÍTICO ao inicializar o banco de dados: " + e.getMessage());
             e.printStackTrace();
+            stop(); // Para o servidor Spark se a conexão com o DB falhar
             return;
         }
 
+        // 5. DEFINIR ROTAS DA API
         final String finalDbUrl = dbUrl;
         post("/api/cadastrar", (request, response) -> {
             response.type("application/json");
