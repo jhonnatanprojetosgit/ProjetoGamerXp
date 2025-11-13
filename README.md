@@ -2,3 +2,5 @@ Explore o melhor do mundo gamer! Lançamentos, clássicos e promoções imperdí
 https://jhonnatanprojetosgit.github.io/ProjectGameT2/index.html#
 https://www.canva.com/design/DAGzMTYcTPQ/zjxBsdZq24PZf7DyuDnv3g/edit?utm_content=DAGzMTYcTPQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 https://github.com/jhonnatanprojetosgit/ProjetoGamerXp.git
+
+ https://milton209.github.io/faculdad_site/
